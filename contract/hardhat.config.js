@@ -11,7 +11,7 @@ if (!process.env.PRIVATE_KEY) {
  * @type import('hardhat/config').HardhatUserConfig
  */
 module.exports = {
-  solidity: "0.8.12",
+  solidity: "0.8.17",
   networks: {
     'godwoken-testnet': {
         url: `https://godwoken-testnet-v1.ckbapp.dev`,
