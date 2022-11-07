@@ -55,7 +55,7 @@ contract RankDynNft is ERC1155,ChainlinkClient {
     }
 
     function updateRankUrl() public onlyOwner {
-        string rankUrlNew = requestVolumeData();
+        string memory rankUrlNew = requestVolumeData();
         rankUrl = rankUrlNew;
     }
 
@@ -63,7 +63,7 @@ contract RankDynNft is ERC1155,ChainlinkClient {
      * Create a Chainlink request to retrieve API response, find the target
      * data, then multiply by 1000000000000000000 (to remove decimal places from data).
      */
-    function requestVolumeData() public returns (string rankUrl) {
+    function requestVolumeData() public returns (string memory) {
         Chainlink.Request memory req = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
 
         // Set the URL to perform the GET request on
@@ -83,11 +83,12 @@ contract RankDynNft is ERC1155,ChainlinkClient {
         req.add('path', 'data'); // Chainlink nodes 1.0.0 and later support this format
 
         // Multiply the result by 1000000000000000000 to remove decimals
-//        int256 timesAmount = 10**18;
-//        req.addInt('times', timesAmount);
+        //        int256 timesAmount = 10**18;
+        //        req.addInt('times', timesAmount);
 
         // Sends the request
-        return sendChainlinkRequest(req, fee);
+        bytes32 chainLink = sendChainlinkRequest(req, fee);
+        return bytes32ToString(chainLink);
     }
 
     /**
@@ -96,5 +97,17 @@ contract RankDynNft is ERC1155,ChainlinkClient {
     function fulfill(bytes32 _requestId, uint256 _volume) public recordChainlinkFulfillment(_requestId) {
         emit RequestVolume(_requestId, _volume);
         volume = _volume;
+    }
+
+    function bytes32ToString(bytes32 _bytes32) public pure returns (string memory) {
+        uint8 i = 0;
+        while(i < 32 && _bytes32[i] != 0) {
+            i++;
+        }
+        bytes memory bytesArray = new bytes(i);
+        for (i = 0; i < 32 && _bytes32[i] != 0; i++) {
+            bytesArray[i] = _bytes32[i];
+        }
+        return string(bytesArray);
     }
 }

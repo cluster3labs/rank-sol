@@ -1,7 +1,7 @@
 require("@nomiclabs/hardhat-waffle");
 
 if (!process.env.PRIVATE_KEY) {
-  throw new Error('PRIVATE_KEY environment variable is missing.');
+    throw new Error('PRIVATE_KEY environment variable is missing.');
 }
 
 // You need to export an object to set up your config
@@ -11,11 +11,15 @@ if (!process.env.PRIVATE_KEY) {
  * @type import('hardhat/config').HardhatUserConfig
  */
 module.exports = {
-  solidity: "0.8.17",
-  networks: {
-    'godwoken-testnet': {
-        url: `https://godwoken-testnet-v1.ckbapp.dev`,
-        accounts: [process.env.PRIVATE_KEY]
+    solidity: "0.8.17",
+    networks: {
+        'godwoken-testnet': {
+            url: `https://godwoken-testnet-v1.ckbapp.dev`,
+            accounts: [process.env.PRIVATE_KEY]
+        },
+        mumbai: {
+            url: `https://rpc-mumbai.matic.today`,
+            accounts: [process.env.PRIVATE_KEY]
+        }
     }
-  }
 };

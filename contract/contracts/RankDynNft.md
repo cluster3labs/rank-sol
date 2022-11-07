@@ -6,6 +6,9 @@
 2. uri, uri return a url of nft metadata
 3. balanceOf, balance of return an address total  num mint by this contract
 
+### use hardhat for deploy
+1. PRIVATE_KEY=123123 npx hardhat run scripts/deploy.js --network godwoken-testnet
+
 ### build java
 1. sudo truffle compile
 2. web3j generate truffle --truffle-json ./build/contracts/BadgeNft.json --outputDir src -p com.xingyun.cluster3
