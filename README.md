@@ -1,3 +1,3 @@
 ### rank-sol
 
-rank dyn solidity version
+rank dynamic solidity version
