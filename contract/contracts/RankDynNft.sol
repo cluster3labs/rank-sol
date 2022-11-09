@@ -67,7 +67,13 @@ contract RankDynNft is ERC1155, ChainlinkClient {
     }
 
     function updateRankUrlRequest() public onlyOwner {
-        request();
+        Chainlink.Request memory req = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
+        req.add(
+            'get',
+            'https://api.cluster3.club/openapi/token/rankUrl'
+        );
+        req.add('path', 'data');
+        sendChainlinkRequest(req, (1 * LINK_DIVISIBILITY) / 10);
     }
 
     /**
@@ -88,13 +94,7 @@ contract RankDynNft is ERC1155, ChainlinkClient {
         // request.add("path", "RAW.ETH.USD.VOLUME24HOUR"); // Chainlink nodes prior to 1.0.0 support this format
         // Chainlink nodes 1.0.0 and later support this format
 
-        Chainlink.Request memory req = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
-        req.add(
-            'get',
-            'https://api.cluster3.club/openapi/token/rankUrl'
-        );
-        req.add('path', 'data');
-        sendChainlinkRequest(req, (1 * LINK_DIVISIBILITY) / 10);
+
         // 0,1*10**18 LINK
     }
 
