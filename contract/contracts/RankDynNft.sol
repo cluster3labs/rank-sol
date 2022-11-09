@@ -23,7 +23,10 @@ contract RankDynNft is ERC1155, ChainlinkClient {
 
     event GetResponse(bytes32 indexed requestId, bytes volume);
 
-    constructor() ERC1155("http://rank.flowingcloud.cn/openapi/token/{id}.json") {
+    // 收到eth事件，记录amount和gas
+    event ReceiveLog(uint amount, uint gas);
+
+    constructor() ERC1155("https://api.cluster3.club/openapi/token/{id}.json") payable {
         owner = msg.sender;
         setChainlinkToken(0x326C977E6efc84E512bB9C30f76E30c160eD06FB);
         setChainlinkOracle(0x40193c8518BB267228Fc409a613bDbD8eC5a97b3);
@@ -37,6 +40,10 @@ contract RankDynNft is ERC1155, ChainlinkClient {
         _;
     }
 
+    receive() external payable{
+        emit ReceiveLog(msg.value, gasleft());
+    }
+
     function mint(address to, uint256 tokenId) public onlyOwner {
         require(to != address(0), "can not mint to the zero address");
 
@@ -46,7 +53,11 @@ contract RankDynNft is ERC1155, ChainlinkClient {
     }
 
     function uri(uint256 tokenId) override public pure returns (string memory) {
-        return string.concat("http://rank.flowingcloud.cn/openapi/token/", Strings.toString(tokenId), ".json");
+        return string.concat("https://api.cluster3.club/openapi/token/", Strings.toString(tokenId), ".json");
+    }
+
+    function showRankUrl() public view returns (string memory) {
+        return rankUrl;
     }
 
     // balanceOf
@@ -80,7 +91,7 @@ contract RankDynNft is ERC1155, ChainlinkClient {
         Chainlink.Request memory req = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
         req.add(
             'get',
-            'https://rank.flowingcloud.cn/openapi/token/rankUrl'
+            'https://api.cluster3.club/openapi/token/rankUrl'
         );
         req.add('path', 'data');
         sendChainlinkRequest(req, (1 * LINK_DIVISIBILITY) / 10);
@@ -95,23 +106,5 @@ contract RankDynNft is ERC1155, ChainlinkClient {
         emit GetResponse(requestId, bytesData);
         data = bytesData;
         rankUrl = string(data);
-    }
-
-
-    //    function fulfill(bytes32 _requestId, uint256 _volume) public recordChainlinkFulfillment(_requestId) {
-    //        emit RequestVolume(_requestId, _volume);
-    //        volume = _volume;
-    //    }
-
-    function bytes32ToString(bytes32 _bytes32) public pure returns (string memory) {
-        uint8 i = 0;
-        while (i < 32 && _bytes32[i] != 0) {
-            i++;
-        }
-        bytes memory bytesArray = new bytes(i);
-        for (i = 0; i < 32 && _bytes32[i] != 0; i++) {
-            bytesArray[i] = _bytes32[i];
-        }
-        return string(bytesArray);
     }
 }
