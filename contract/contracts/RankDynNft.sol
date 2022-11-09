@@ -80,7 +80,7 @@ contract RankDynNft is ERC1155, ChainlinkClient {
      * Create a Chainlink request to retrieve API response, find the target
      * data, then multiply by 1000000000000000000 (to remove decimal places from data).
      */
-    function request() public {
+    // function request() public {
         // Set the path to find the desired data in the API response, where the response format is:
         // {"RAW":
         //   {"ETH":
@@ -96,7 +96,7 @@ contract RankDynNft is ERC1155, ChainlinkClient {
 
 
         // 0,1*10**18 LINK
-    }
+    // }
 
     bytes public data;
     /**
