@@ -19,6 +19,8 @@ contract RankDynNft is ERC1155, ChainlinkClient {
 
     string public rankUrl;
 
+    string public name = "Cluster3 Dynamic NFT";
+
     mapping(address => uint256) balanceMapping;
 
     event GetResponse(bytes32 indexed requestId, bytes volume);
